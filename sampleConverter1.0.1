@@ -1,0 +1,59 @@
+import ffmpeg
+from tkinter import *
+import os
+from tkinter import filedialog
+
+def WAVtoMP3(lst):
+      for file in lst:
+            os.system(f"""ffmpeg -i {file} -vn -ac 2 -b:a 192k {file[:-4]}.mp3""")   
+
+def browseFolder():
+      dirName = filedialog.askdirectory()
+      os.chdir(dirName)
+      return (dirName)
+
+def folderWAVtoMP3():
+      lst = []
+      for files in os.listdir(browseFolder()):
+            if files.endswith(".wav"):
+                  lst.append(files)                  
+      WAVtoMP3(lst)
+
+def browseFile():
+      fileName = filedialog.askopenfilename()
+      os.chdir(os.path.dirname(fileName))           
+      return(os.path.basename(fileName))
+
+def fileWAVtoMP3():
+      lst = [browseFile()]
+      WAVtoMP3(lst)
+      
+#GUI
+root = Tk()
+root.title("Sample Converter 1.0")
+
+labelHeader = Label(root, text="Sample Converter")
+labelHeader.config(font=("Courier", 25))
+labelHeader.grid(row=0 ,column=1)
+
+labelInstruction1 = Label(root, text="Convert WAV to MP3")
+labelInstruction1.config(font=("Courier", 12))
+labelInstruction1.grid(row=2, column=1)
+
+labelInstruction2 = Label(root, text="Browse folder with WAV-files")
+labelInstruction2.config(font=("Courier", 9))
+labelInstruction2.grid(row=4, column=1)
+
+buttonBrowse = Button(text="Convert Folder", command = folderWAVtoMP3)
+buttonBrowse.grid(row=4, column=2)
+
+labelInstruction3 = Label(root, text="Browse WAV-file")
+labelInstruction3.config(font=("Courier", 9))
+labelInstruction3.grid(row=5, column=1)
+
+buttonSort = Button(text="Convert File", command = fileWAVtoMP3)
+buttonSort.grid(row=5, column=2)
+                      
+
+
+mainloop()
